@@ -31,6 +31,20 @@ double getMin(std::vector<double> const& vec){
 	return *std::min_element(vec.begin(), vec.end());
 }
 
+double getMedian(std::vector<double> vec){
+	if(vec.empty()){
+		return 0;
+	}
+
+	size_t size = vec.size();
+	std::sort(vec.begin(), vec.end());
+	if(size % 2 == 0){
+		return (vec[size / 2 - 1] + vec[size / 2]) / 2;
+	}
+	else{
+		return vec[size / 2];
+	}
+}
 
 
 
@@ -53,11 +67,13 @@ int main(){
 	}//end if 
 	
 	mean = getMean(vec);
-	std::cout << mean << std::endl;
+	std::cout << "mean: " << mean << std::endl;
 	max = getMax(vec);
 	std::cout << "max: " << max << std::endl;
 	min = getMin(vec);
 	std::cout << "min: " << min << std::endl;
+	median = getMedian(vec);
+	std::cout << "median: " << median << std::endl;
 	return 0;
 }
 	
