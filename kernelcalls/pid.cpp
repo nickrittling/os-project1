@@ -3,21 +3,30 @@
 #include <iomanip>
 #include <cstdio>
 #include <chrono>
+#include <fstream>
 int main(){
-	auto start = std::chrono::high_resolution_clock::now();
-	std::ios_base::sync_with_stdio(false);
+	std::ofstream myfile("pidresult.txt");
+	if(myfile.is_open()){
+		for(int j = 0; j < 1000; j++){
+
+			auto start = std::chrono::high_resolution_clock::now();
+			std::ios_base::sync_with_stdio(false);
 	
-	for(int i = 0; i < 50; i++)
-	{
-		int id = getpid();
+			for(int i = 0; i < 100000; i++)
+			{
+				int id = getpid();
+			}
+
+			auto end = std::chrono::high_resolution_clock::now();
+			double time_taken = std::chrono::duration_cast<std::
+				chrono::nanoseconds>(end - start).count();
+
+			time_taken *= 1e-9;
+			myfile << std::setprecision(9) << time_taken << std::endl;
 	}
 
-	auto end = std::chrono::high_resolution_clock::now();
-	double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+		myfile.close();
 
-	time_taken *= 1e-9;
-
-	std::cout<<"Time taken by program is : " << std::fixed << time_taken
-		<< std::setprecision(9) << " sec\n";
+	}
 	return 0;
 }
