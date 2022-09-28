@@ -9,6 +9,7 @@
 #include <string>
 #include <chrono>
 #include <iomanip>
+#include <fstream>
 #define PORT 8080
 
 
@@ -19,6 +20,7 @@ int main(int argc, char const* argv[])
     int opt = 1;
     int addrlen = sizeof(address);
     char buffer[4096] = { 0 };
+    std::ofstream myfile;
    // std::vector <char> msg = {};
     std::string msg = "";
 
@@ -77,7 +79,11 @@ int main(int argc, char const* argv[])
     time_taken *= 1e-9;
     std::cout << "time taken ";
     std::cout <<std::fixed << std::setprecision(9) << time_taken << std::endl;
-
+    myfile.open("tcpserverresult.txt", std::fstream::app);
+    if(myfile.is_open()){
+	    myfile << std::fixed << std::setprecision(9) << time_taken << std::endl;
+	    myfile.close();
+    }
     // closing the connected socket
     close(new_socket);
     // closing the listening socket
