@@ -1,18 +1,30 @@
+#include <iostream>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <vector>
+#include <string>
+#include <chrono>
+#include <iomanip>
 #define PORT 8080
+
+
 int main(int argc, char const* argv[])
 {
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
     int opt = 1;
     int addrlen = sizeof(address);
-    char buffer[1024] = { 0 };
-    char* hello = "Hello from server";
+    char buffer[4096] = { 0 };
+   // std::vector <char> msg = {};
+    std::string msg = "";
+
+    for(int i = 0; i < 4096; i++){
+	    msg += 'A';
+    }
  
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -49,11 +61,23 @@ int main(int argc, char const* argv[])
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    valread = read(new_socket, buffer, 1024);
-    printf("%s\n", buffer);
-    send(new_socket, hello, strlen(hello), 0);
+    //valread = read(new_socket, buffer, 4096);
+    //printf("%s\n", buffer);
+    auto start = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
+    send(new_socket, msg.c_str(), msg.length(), 0);
     printf("Hello message sent\n");
- 
+    valread = read(new_socket, buffer, 4096);
+
+    auto end = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::
+    	chrono::nanoseconds>(end - start).count();
+
+    time_taken *= 1e-9;
+    std::cout << "time taken ";
+    std::cout <<std::fixed << std::setprecision(9) << time_taken << std::endl;
+
     // closing the connected socket
     close(new_socket);
     // closing the listening socket

@@ -1,16 +1,23 @@
+#include <iostream>
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <string>
 #define PORT 8080
  
 int main(int argc, char const* argv[])
 {
     int sock = 0, valread, client_fd;
     struct sockaddr_in serv_addr;
-    char* hello = "Hello from client";
-    char buffer[1024] = { 0 };
+    std::string msg = "";
+    for(int i = 0; i < 4096; i++){
+	    msg += 'A';
+    }
+
+    char* hello = "Hello there";
+    char buffer[200000] = { 0 };
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
         return -1;
@@ -35,10 +42,12 @@ int main(int argc, char const* argv[])
         printf("\nConnection Failed \n");
         return -1;
     }
-    send(sock, hello, strlen(hello), 0);
+    send(sock, msg.c_str(), msg.length(), 0);
     printf("Hello message sent\n");
-    valread = read(sock, buffer, 1024);
+    valread = read(sock, buffer, 200000);
     printf("%s\n", buffer);
+    //msg = buffer;
+    //std::cout<<msg<<std::endl;
  
     // closing the connected socket
     close(client_fd);
