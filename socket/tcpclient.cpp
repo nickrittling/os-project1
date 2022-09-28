@@ -5,6 +5,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <string>
+#include <fstream>
+#include <chrono>
+#include <iomanip>
 #define PORT 8080
  
 int main(int argc, char const* argv[])
@@ -16,8 +19,9 @@ int main(int argc, char const* argv[])
 	    msg += 'A';
     }
 
-    char* hello = "Hello there";
+    //char* hello = "Hello there";
     char buffer[200000] = { 0 };
+    std::ofstream myfile;
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
         return -1;
@@ -42,10 +46,25 @@ int main(int argc, char const* argv[])
         printf("\nConnection Failed \n");
         return -1;
     }
+    auto start = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
     send(sock, msg.c_str(), msg.length(), 0);
-    printf("Hello message sent\n");
+    //printf("Hello message sent\n");
     valread = read(sock, buffer, 200000);
-    printf("%s\n", buffer);
+    auto end = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::
+    	chrono::nanoseconds>(end - start).count();
+
+    time_taken *= 1e-9;
+    
+    myfile.open("tcpclientresult.txt", std::fstream::app);
+    if(myfile.is_open()){
+	    myfile << std::fixed << std::setprecision(9) << time_taken << std::endl;
+	    myfile.close();
+    }
+    std::cout<<time_taken;
+    //printf("%s\n", buffer);
     //msg = buffer;
     //std::cout<<msg<<std::endl;
  
