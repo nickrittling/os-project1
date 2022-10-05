@@ -19,12 +19,12 @@ int main(int argc, char const* argv[])
     struct sockaddr_in address;
     int opt = 1;
     int addrlen = sizeof(address);
-    char buffer[4096] = { 0 };
+    char buffer[512000] = { 0 };
     std::ofstream myfile;
    // std::vector <char> msg = {};
     std::string msg = "";
 
-    for(int i = 0; i < 4096; i++){
+    for(int i = 0; i < 512000; i++){
 	    msg += 'A';
     }
  
@@ -63,23 +63,23 @@ int main(int argc, char const* argv[])
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    //valread = read(new_socket, buffer, 4096);
+    //valread = read(new_socket, buffer, 512000);
     //printf("%s\n", buffer);
     auto start = std::chrono::high_resolution_clock::now();
     std::ios_base::sync_with_stdio(false);
 
     send(new_socket, msg.c_str(), msg.length(), 0);
-    printf("Hello message sent\n");
-    valread = read(new_socket, buffer, 4096);
+    //printf("Hello message sent\n");
+    valread = read(new_socket, buffer, 512000);
 
     auto end = std::chrono::high_resolution_clock::now();
     double time_taken = std::chrono::duration_cast<std::
     	chrono::nanoseconds>(end - start).count();
 
     time_taken *= 1e-9;
-    std::cout << "time taken ";
-    std::cout <<std::fixed << std::setprecision(9) << time_taken << std::endl;
-    myfile.open("tcpserverresult.txt", std::fstream::app);
+    //std::cout << "time taken ";
+    //std::cout <<std::fixed << std::setprecision(9) << time_taken << std::endl;
+    myfile.open("serrst.txt", std::fstream::app);
     if(myfile.is_open()){
 	    myfile << std::fixed << std::setprecision(9) << time_taken << std::endl;
 	    myfile.close();

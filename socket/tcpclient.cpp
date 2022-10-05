@@ -15,12 +15,12 @@ int main(int argc, char const* argv[])
     int sock = 0, valread, client_fd;
     struct sockaddr_in serv_addr;
     std::string msg = "";
-    for(int i = 0; i < 4096; i++){
+    for(int i = 0; i < 512000; i++){
 	    msg += 'A';
     }
 
     //char* hello = "Hello there";
-    char buffer[200000] = { 0 };
+    char buffer[512000] = { 0 };
     std::ofstream myfile;
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
@@ -51,19 +51,19 @@ int main(int argc, char const* argv[])
 
     send(sock, msg.c_str(), msg.length(), 0);
     //printf("Hello message sent\n");
-    valread = read(sock, buffer, 200000);
+    valread = read(sock, buffer, 512000);
     auto end = std::chrono::high_resolution_clock::now();
     double time_taken = std::chrono::duration_cast<std::
     	chrono::nanoseconds>(end - start).count();
 
     time_taken *= 1e-9;
     
-    myfile.open("tcpclientresult.txt", std::fstream::app);
+    myfile.open("clirst.txt", std::fstream::app);
     if(myfile.is_open()){
 	    myfile << std::fixed << std::setprecision(9) << time_taken << std::endl;
 	    myfile.close();
     }
-    std::cout<<time_taken;
+    //std::cout<<time_taken;
     //printf("%s\n", buffer);
     //msg = buffer;
     //std::cout<<msg<<std::endl;
